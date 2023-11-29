@@ -2,13 +2,16 @@ const express = require('express');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+require('dotenv').config();
 
 const app = express();
 const port = 3000;
 const httpServer = createServer(app);
+
 const io = new Server(httpServer, {
     cors: {
-        origin: ["http://localhost:8000", "http://192.168.2.123:8000"],
+        //origin: ["http://localhost:8000", "http://192.168.2.123:8000"],
+        origin: process.env.CORS_ORIGIN_ALLOWED.split(', '),
         methods: ["GET", "POST"]
       }
  });
@@ -63,6 +66,8 @@ async function intervalFunc() {
     }
 }
 
+
+// send whatsapp message
 const WASendMessage = async (socket, chatId, text) => {
     try {
         const client = clientObject[clientId];
@@ -75,6 +80,7 @@ const WASendMessage = async (socket, chatId, text) => {
     }
 }
 
+// fetch message lists on active window chat
 const WAFetchMessages = async (socket, chatid) => {
     try
     {
@@ -95,7 +101,7 @@ const WAFetchMessages = async (socket, chatid) => {
                 }
             });
 
-            console.log(parse_messages);
+            //console.log(parse_messages);
             socket.emit("activeWindowMsg", parse_messages);
 
             //set seen chat
@@ -112,6 +118,7 @@ const WAFetchMessages = async (socket, chatid) => {
     }
 }
 
+// get chat lists on left panel
 const WAGetChats = async () => {
     try
     {
@@ -121,28 +128,6 @@ const WAGetChats = async () => {
             const chats = await client.getChats();
             const status = await client.getState();
 
-            // const newChats = await Promise.all(chats.map(async (chat) => {
-            //     const contactId = chat.id;
-            //     const profilePicUrl = await client.getProfilePicUrl(contactId);
-            //     chat.profilePicUrl = profilePicUrl;
-            //     return chat;
-            //   }));
-
-            // for (const chat of chats) {
-            //     const contact = await chat.getContact();
-            //     const profilePicUrl = await contact.getProfilePicUrl();
-            //     //const profilePicUrl = await client.getProfilePicUrl(contactId);
-
-            //     // Use the profile picture URL as needed
-            //     console.log(profilePicUrl);
-            //   }
-            //  let chat = chats[0];
-            // // let chatid = chat.id._serialized;
-            // // let msg = await client.getChatById(chatid);
-            // const searchOptions = { limit: 10 };
-            // const messages = await chat.fetchMessages(searchOptions);
-            // console.log(messages);
-            console.log("status = ", status);
             io.sockets.emit("allChats", chats);
             return true;
         }
