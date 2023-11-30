@@ -6,6 +6,11 @@ export default function ChatContainer () {
     const context = useContext(ChatContext);
     const messagesEndRef = useRef(null);
 
+    let origin_messages = context.messages;
+    let filtered_messages = origin_messages.filter((msg)=>{
+        return msg.type == 'chat' || msg.hasMedia;
+    });
+
     useEffect(()=> {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
       });
@@ -15,8 +20,9 @@ export default function ChatContainer () {
         //     { context => (
                 <div className="chat-container">
                     {
-                        context.messages.length > 0 &&
-                        context.messages.map((message, index) =>
+                        //context.messages.length > 0 &&
+                        //context.messages.map((message, index) =>
+                        filtered_messages.map((message, index) =>
                             (<div className={"message-box break-words " + (message.fromMe ? 'my-message' : 'friend-message')} key={index}>
                             <p className="!text-left">
                                 <span className="text-left inline">{message.author}</span>

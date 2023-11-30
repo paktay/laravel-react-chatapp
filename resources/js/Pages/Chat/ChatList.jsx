@@ -6,7 +6,7 @@ export default function ChatList ({chats}) {
     const context = useContext(ChatContext);
 
     function selectChat (chat) {
-        context.handleClickContact(chat.id._serialized);
+        context.handleClickContact(chat.id._serialized, chat.name);
     }
 
     //console.log("chat list rendered");

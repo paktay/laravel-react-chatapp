@@ -14,7 +14,7 @@ export default function ChatInput() {
     }
 
     return (
-        context.activeChatId &&
+        context.activeChat.activeChatId &&
         <div className="chatbox-input">
             <i className="fa-regular fa-face-grin" />
             <i className="fa-sharp fa-solid fa-paperclip" />

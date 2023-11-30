@@ -4,17 +4,19 @@ import ChatContext from "../context";
 export default function ChatHeader() {
     const context = useContext(ChatContext);
 
-    let displayContact = "Loading..";
+    let displayContact = context.activeChat.activeName;
+    // let displayContact = "Loading..";
     try {
-
-        if(context.activeContact != null) {
-            if(context.activeContact.isGroup) {
-                displayContact = context.activeContact.pushname;
-            } else if(context.activeContact.name != null) {
-                displayContact = context.activeContact.name;
+        //console.log("activecontact", context.activeContact);
+        if(context.activeChat.activeContact != null && Object.keys(context.activeChat.activeContact).length > 1) {
+            if(context.activeChat.activeContact.isGroup) {
+                //displayContact = context.activeContact?.pushname;
+                displayContact = context.activeChat.activeContact?.name;
+            } else if(context.activeChat.activeContact?.name != null) {
+                displayContact = context.activeChat.activeContact?.name;
             } else {
-                displayContact = context.activeContact.number +
-                (context.activeContact.pushname ? " ~ " + context.activeContact.pushname : "");
+                displayContact = context.activeChat.activeContact?.number +
+                (context.activeChat.activeContact?.pushname ? " ~ " + context.activeChat.activeContact?.pushname : "");
             }
         }
     } catch (err) {
@@ -22,14 +24,14 @@ export default function ChatHeader() {
     }
 
     let profilePic = null;
-    if(context.activeContact != null && context.activeContact.hasOwnProperty('profilePic')) {
-        profilePic = context.activeContact.profilePic;
+    if(context.activeChat.activeContact != null && context.activeChat.activeContact.hasOwnProperty('profilePic')) {
+        profilePic = context.activeChat.activeContact.profilePic;
     }
 
     return (
         <div className="header">
             <div className="img-text">
-            {profilePic != null &&
+            {/* {profilePic != null && */}
                 <div className="user-img">
                     <img
                     className="dp"
@@ -37,7 +39,7 @@ export default function ChatHeader() {
                     alt=""
                     />
                 </div>
-            }
+            {/* } */}
 
             <h4>
                 { displayContact }

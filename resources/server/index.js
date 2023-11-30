@@ -104,13 +104,13 @@ const WAFetchMessages = async (socket, chatid) => {
             });
 
             //console.log(parse_messages);
-            socket.emit("activeWindowMsg", {parse_messages, contact});
+            socket.emit("activeWindowMsg", {parse_messages, contact, chatid});
 
             chat.getContact().then((contact) => {
-                socket.emit("activeWindowMsg", {parse_messages, contact});
+                socket.emit("activeWindowMsg", {parse_messages, contact, chatid});
                 contact.getProfilePicUrl().then((profilePicture) => {
                     contact.profilePic = profilePicture;
-                    socket.emit("activeWindowMsg", {parse_messages, contact});
+                    socket.emit("activeWindowMsg", {parse_messages, contact, chatid});
                 });
             });
                             ;
