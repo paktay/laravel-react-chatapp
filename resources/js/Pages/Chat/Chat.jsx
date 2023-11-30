@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { Children, useEffect, useState } from "react";
 import ChatList from "./ChatList";
 import ChatContainer from "./ChatContainer";
 import Provider from "./Contexts/ChatContext";
 import { Head } from "@inertiajs/react";
 import ChatInput from "./ChatInput";
+import { socket } from './socket';
+import ChatHeader from "./ChatHeader";
 
 
 export default function Chat() {
 
     return (
-        <Provider>
+        <Provider socket={socket}>
             <Head>
                 <title>Whatsapp Clone</title>
             </Head>
@@ -60,30 +62,7 @@ export default function Chat() {
                 </div>
                 <div className="right-container">
                 {/*header */}
-                <div className="header">
-                    <div className="img-text">
-                    <div className="user-img">
-                        <img
-                        className="dp"
-                        src="https://images.pexels.com/photos/2474307/pexels-photo-2474307.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                        alt=""
-                        />
-                    </div>
-                    <h4>
-                        Leo
-                        <br />
-                        <span>Online</span>
-                    </h4>
-                    </div>
-                    <div className="nav-icons">
-                    <li>
-                        <i className="fa-solid fa-magnifying-glass" />
-                    </li>
-                    <li>
-                        <i className="fa-solid fa-ellipsis-vertical" />
-                    </li>
-                    </div>
-                </div>
+                <ChatHeader />
                 {/*chat-container */}
                 <ChatContainer />
                 {/*input-bottom */}
