@@ -2,6 +2,7 @@ const express = require('express');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const { profile } = require('console');
 require('dotenv').config();
 
 const app = express();
@@ -87,11 +88,12 @@ const WAFetchMessages = async (socket, chatid) => {
         if(socket != null) {
             const client = clientObject[clientId];
             const chat = await client.getChatById(chatid);
+            const contact = {};
 
             const searchOptions = { limit: 100 };
             //const searchOptions = { };
             const messages = await chat.fetchMessages(searchOptions);
-            console.log(socket.id);
+            //console.log(socket.id);
 
             const parse_messages = messages.map((message) => {
                 if(message.hasMedia) {
@@ -102,7 +104,18 @@ const WAFetchMessages = async (socket, chatid) => {
             });
 
             //console.log(parse_messages);
-            socket.emit("activeWindowMsg", parse_messages);
+            socket.emit("activeWindowMsg", {parse_messages, contact});
+
+            chat.getContact().then((contact) => {
+                socket.emit("activeWindowMsg", {parse_messages, contact});
+                contact.getProfilePicUrl().then((profilePicture) => {
+                    contact.profilePic = profilePicture;
+                    socket.emit("activeWindowMsg", {parse_messages, contact});
+                });
+            });
+                            ;
+            // const profilePicture = await contact.getProfilePicUrl();
+            // contact.profilePic = profilePicture;
 
             //set seen chat
             chat.sendSeen().then((val)=>{

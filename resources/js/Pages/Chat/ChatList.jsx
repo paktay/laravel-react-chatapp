@@ -9,7 +9,7 @@ export default function ChatList ({chats}) {
         context.handleClickContact(chat.id._serialized);
     }
 
-    console.log("chat list rendered");
+    //console.log("chat list rendered");
 
     return (
         // <ChatContext.Consumer>

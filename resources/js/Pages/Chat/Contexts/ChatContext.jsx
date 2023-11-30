@@ -1,21 +1,39 @@
 import React, { useEffect, useState } from "react";
 import ChatContext from "../../context";
-import { socket } from '../socket';
 
-const provider = ({children}) => {
+const provider = ({ socket, children }) => {
     const [messages, setMessages] = useState([]);   //active window messages
     const [chats, setChats] = useState({});     //chat lists on left panel
-    const [lastMessage, setLastMessage] = useState([]);
     const [activeChatId, setActiveChatId] = useState(null);
+    const [activeContact, setActiveContact] = useState(null);
+
+    const handleClickContact = (chatId) => {
+        setActiveChatId(chatId);
+
+        socket.emit('fetchMessages', chatId);
+    }
+
+    const handleSendMessage = (message) => {
+        console.log("send message", message);
+        socket.emit('sendMessage', {chatId: activeChatId, message: message});
+        setTimeout(() => {
+            socket.emit('fetchMessages', activeChatId);
+        }, 500);
+    }
+
+
 
     useEffect(()=> {
+
         function onAllChats(chats) {
-            console.log(chats);
+            //console.log(chats);
             setChats(chats);
         }
 
-        function onActiveWindowMsg(messages) {
-            console.log(messages);
+        function onActiveWindowMsg({parse_messages, contact}) {
+            console.log(contact);
+            setActiveContact(contact);
+            let messages = parse_messages;
             setMessages(messages);
         }
 
@@ -28,9 +46,10 @@ const provider = ({children}) => {
                 }, 500);
             }
 
-            setLastMessage(message);
+            //setLastMessage(message);
         }
 
+        console.log("use effect");
         socket.on('allChats', onAllChats);
         socket.on('activeWindowMsg', onActiveWindowMsg);
         socket.on('message', onMessage);
@@ -48,17 +67,11 @@ const provider = ({children}) => {
             value={{
                 messages: messages,
                 chats: chats,
-                handleClickContact: (chatId) => {
-                    setActiveChatId(chatId);
-
-                    socket.emit('fetchMessages', chatId);
-                },
-                handleSendMessage: (message) => {
-                    console.log("send message", message);
-                    socket.emit('sendMessage', {chatId: activeChatId, message: message});
-                },
-                lastMessage: lastMessage,
+                handleClickContact: handleClickContact,
+                handleSendMessage: handleSendMessage,
+                //lastMessage: lastMessage,
                 activeChatId: activeChatId,
+                activeContact: activeContact,
             }}
         >
             {children}

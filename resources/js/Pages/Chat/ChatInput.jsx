@@ -8,13 +8,13 @@ export default function ChatInput() {
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-          console.log('enter key');
           context.handleSendMessage(text);
           setText("");
         }
     }
 
     return (
+        context.activeChatId &&
         <div className="chatbox-input">
             <i className="fa-regular fa-face-grin" />
             <i className="fa-sharp fa-solid fa-paperclip" />
