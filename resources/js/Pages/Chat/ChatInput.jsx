@@ -13,12 +13,14 @@ export default function ChatInput() {
         }
     }
 
+    //console.log("render chatinput");
+
     return (
         context.activeChat.activeChatId &&
         <div className="chatbox-input">
             <i className="fa-regular fa-face-grin" />
             <i className="fa-sharp fa-solid fa-paperclip" />
-            <input type="text" placeholder="Type a message" value={text} onChange={(e) => setText(e.target.value)} onKeyDown={handleKeyDown}  />
+            <input type="text" placeholder="Type a message" value={text} onChange={(e) => setText(e.target.value)} onKeyDown={handleKeyDown} autoFocus />
             <i className="fa-solid fa-microphone" />
         </div>
     )
