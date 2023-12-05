@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
 return [
-
+    'whitelisted_ips' => ['127.0.0.1', '192.168.2.183', '192.168.2.123'],
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Jakarta',
 
     /*
     |--------------------------------------------------------------------------

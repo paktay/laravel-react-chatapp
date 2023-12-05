@@ -151,6 +151,26 @@ const WAGetChats = async () => {
     }
 }
 
+const updateContact = async (msg) => {
+    let contact = await msg.getContact();
+    let name = contact.pushname;
+    let phone = contact.number;
+
+    fetch(process.env.APP_URL + '/api/contacts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            'name': name,
+            'phone': phone,
+         })
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error sending request:', error));
+}
+
 const createWhatsappSession = () => {
     const socket = socketObject;
     const client = new Client({
@@ -189,6 +209,7 @@ const createWhatsappSession = () => {
     client.on('message', async msg => {
         io.sockets.emit("message", msg);
         WAGetChats();
+        updateContact(msg);
     });
 
     client.initialize();
